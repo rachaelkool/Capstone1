@@ -1,0 +1,40 @@
+{% extends '/teacher/teacher_base.html'  %}
+
+{% block title %}Assignment Info{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3 class="display-6">{{assignment.name}}</h3>
+    <table class="table table-striped ">
+      <thead class="thead-dark container">
+        <th>ID</th>
+        <th>Grade</th>
+        <th>Name</th>
+        <th>Due Date</th>
+        <th>Score</th>
+        <th></th>
+      </thead>
+      {% for score in assignment.scores %}
+      <tbody>
+        <tr>
+          <td class="col-1">{{score.student_id}}</td>
+          <td class="col-2">{{score.students.grade}}</td>
+          <td class="col-3">{{score.students.first_name}} {{score.students.last_name}}</td>
+          <td class="col-2">{{assignment.due_date}}</td>
+          <td class="col-1">{{score.score}}%</td>
+          <td class="col-1">
+            <form action="/assignments/score/{{score.id}}/edit", method="POST">
+              <button class="btn btn-sm btn-outline-danger pr-3 pl-3">Edit</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+      {% endfor %}
+
+    </table>
+  </div>
+
+
+<a class="ml-3" href="/teachers/{{assignment.teacher_id}}">Back to Assignments List</a>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://bootswatch.com/4/spacelab/bootstrap.min.css">
+  <title>View</title>
+</head>
+
+<div class="container" style="margin-top: 2em">
+  {% for category, msg in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{category}}">{{msg}}</div>
+  {% endfor %}
+
+</div>
+
+<body class="container">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-4">
+      </div>
+      <div class="col-6">
+        <a href="/teachers/login">
+          <button class="btn btn-outline-dark btn-lg mt-5">Teacher View</button>
+        </a>
+        <a href="/students/login">
+          <button class="btn btn-outline-dark btn-lg mt-5">Student View</button>
+        </a>
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+  </div>
+
+
+
+
+    {% block content %}
+    {% endblock %}
+
+
+</body>
+</html>
+
+

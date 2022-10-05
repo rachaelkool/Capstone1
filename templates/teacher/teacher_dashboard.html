@@ -1,0 +1,121 @@
+{% extends '/teacher/teacher_base.html'  %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+<script>
+
+  // Enable pusher logging - don't include this in production
+  Pusher.logToConsole = true;
+
+  var pusher = new Pusher('9baa0a10e519235937c4', {
+    cluster: 'us2'
+  });
+
+  const removeButton = () => {
+    let alertContainer = document.querySelector('.alert-dismissible');
+    alertContainer.remove();
+  }
+
+  var channel = pusher.subscribe('my-channel');
+  channel.bind('my-event', function(data) {
+    let futureHTML = data.message;
+    futureHTML = futureHTML.toUpperCase();
+    let alertContainer = document.querySelector('.alert-container');
+    let alertBootStrapContainer = document.createElement('div');
+    alertBootStrapContainer.classList.add('alert', 'alert-warning', 'alert-dismissible', 'fade', 'show')
+    let text = document.createElement('div');
+    let x = document.createElement('button');
+    text.classList.add('alert-text');
+    x.classList.add('close');
+    x.innerHTML = 'X';
+    x.addEventListener("click", removeButton)
+    text.innerHTML = futureHTML;
+    alertBootStrapContainer.appendChild(text);
+    alertBootStrapContainer.appendChild(x);
+    alertContainer.appendChild(alertBootStrapContainer);
+    console.log('i happened')
+  });
+
+</script>
+
+<div class="container">
+    <div class="alert-container"></div>
+  
+
+    <h2 class="display-4">Assignments</h2>
+    <table class="table table-striped table-borderless">
+      <thead class="thead-dark container">
+        <th></th>
+        <th>Name</th>
+        <th>Due Date</th>
+        <th></th>
+      </thead>
+      <tbody>
+        {% for assignment in teacher.assignments %}
+        <tr>
+            <td class="col-1">
+              <form action="/assignments/{{assignment.id}}/edit">
+                <button class="btn btn-sm btn-outline-danger pr-3 pl-3">Edit</button>
+              </form>
+            </td>
+            <td class="col-6">
+                <a href="/assignments/{{assignment.id}}">{{assignment.name}}</a>
+            </td>
+            <td class="col-4">{{assignment.due_date}}</td>
+            <td class="col-1">
+              <form action="/assignments/{{assignment.id}}/delete", method="POST">
+                <button class="btn btn-sm ml-3 btn-outline-danger" onclick="return confirm('Are you sure you want to delete this item?')">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                  </svg>
+                </button>
+              </form>
+            </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+<div class="btn-group">
+<form action="/assignments/add">
+    <button class="btn btn-info mt-3 ml-2">Add New Assignment</button>
+</form>
+</div>
+
+
+
+
+
+
+
+<!-- <div class="container">
+  <div class="alert-container"></div>
+  <h1 class="display-4">Students</h1>
+  <table class="table table-striped">
+    <thead class="thead-dark container">
+      <th>Student ID</th>
+      <th>Name</th>
+      <th>Grade</th>
+      <th>Assignments</th>
+    </thead>
+    <tbody>
+      {% for student in teacher.students %}
+      <tr>
+          <td class="col-1">id</td>
+          <td class="col-5">{{student}}</td>
+          <td class="col-1">grade</td>
+          <td class="col-5">
+            <a href="#">View All</a>
+          </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div> -->
+
+{% endblock %}

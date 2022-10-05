@@ -1,0 +1,50 @@
+{% extends 'student/student_base.html'  %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h2 class="display-4">Assignments</h2>
+  <h2></h2>
+
+  <div class="row">
+    <table class="table table-striped col">
+      <thead class="thead-dark">
+        <th>Name</th>
+        <th>Due Date</th> 
+        <th>Score</th>
+        <th></th>
+      </thead>
+      {% for score in student.scores %}
+      <tbody>
+        <tr>
+            <td>{{score.assignments.name}}</td>
+
+            <td>{{score.assignments.due_date}}</td>
+
+            {% if score.score %}
+            <td>{{score.score}}%</td>
+            {% else %}
+            <td class="text-danger">incomplete</td>
+            {% endif %}
+
+            {% if score.passed == False %}
+            <td>
+              <form action="/publish/attempt/{{score.id}}" method="POST">
+                <button class="btn btn-link btn-sm pb-0"><i class="text-danger">request another attempt</i></button>
+              </form>           
+            </td>
+            {% else %}
+            <td></td>
+            {% endif %}
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+{% endblock %}
