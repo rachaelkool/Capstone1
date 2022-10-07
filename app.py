@@ -156,13 +156,14 @@ def assignment_info(id):
         return render_template('assignment/assignment.html', assignment=assignment)
 
 
-@app.route('/assignments/add', methods=["GET", "POST"])
-def add_assignment():
+@app.route('/teachers/<id>/assignments/add', methods=["GET", "POST"])
+def add_assignment(id):
     '''Teacher can create a new assignment and assign it to students.'''
     if 'id' not in session:      
         flash('Please login first!', 'danger')
         return redirect('/teachers/login')
     else:
+        teacher = Teacher.query.get(id)
         form = AssignmentForm()
         if form.validate_on_submit():
             name = form.name.data
@@ -179,7 +180,7 @@ def add_assignment():
             db.session.commit()
             return redirect(f'/teachers/{teacher_id}')
         else:
-            return render_template('assignment/new_assignment.html', form=form)
+            return render_template('assignment/new_assignment.html', form=form, teacher=teacher)
 
 
 @app.route('/assignments/<id>/edit', methods=["GET", "POST"])
