@@ -12,15 +12,16 @@
       <p>
           {{field.label}}
           {{field}}
-          {% for err in field.errors %}
-            {{err}}
-            {% endfor %}
+          
+          {% for error in field.errors %}
+          <span class="form-text text-danger">{{error}}</span>
+          {% endfor %}
 
       </p>
       {% endfor %}
       <button class="btn btn-info mb-3">Update</button>
   </form>
 
-  <a href="/teachers/register">Back to Assignments List</a>
+  <a href="/teachers/{{assignment.teacher_id}}">Back to Assignments List</a>
 
 {% endblock %}

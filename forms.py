@@ -6,7 +6,8 @@ from wtforms.validators import InputRequired, Length
 classlist = [('1001', '1001- John Jenkins'), ('1002', '1002- Barbara Jones')]
 
 class TeacherRegisterForm(FlaskForm):
-    id = IntegerField('Teacher ID #', validators=[InputRequired()])
+    '''Teacher register account form.'''
+    id = IntegerField('Teacher ID #', validators=[InputRequired()], render_kw={"placeholder": '###'})
     email = StringField('Email', validators=[InputRequired(), Length(max=50)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=6, max=55)])
     email = StringField('Email', validators=[InputRequired(), Length(max=50)])
@@ -15,12 +16,14 @@ class TeacherRegisterForm(FlaskForm):
 
 
 class TeacherLoginForm(FlaskForm):
+    '''Teacher login form.'''
     email = StringField('Email', validators=[InputRequired(), Length(max=50)])
     password = PasswordField('Password',validators=[InputRequired(), Length(min=6, max=55)])
 
 
 class StudentRegisterForm(FlaskForm):
-    id = IntegerField('Student ID #', validators=[InputRequired()])
+    '''Student register account form.'''
+    id = IntegerField('Student ID #', validators=[InputRequired()], render_kw={"placeholder": '####'})
     email = StringField('Email', validators=[InputRequired(), Length(max=50)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=6, max=55)])
     email = StringField('Email', validators=[InputRequired(), Length(max=50)])
@@ -30,19 +33,22 @@ class StudentRegisterForm(FlaskForm):
 
 
 class StudentLoginForm(FlaskForm):
+    '''Student login form.'''
     email = StringField('Email', validators=[InputRequired(), Length(max=50)])
     password = PasswordField('Password',validators=[InputRequired(), Length(min=6, max=55)])
 
 
 class AssignmentForm(FlaskForm):
+    '''Teacher create an assignment form.'''
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
-    due_date = DateField('Due Date')
-    teacher_id = IntegerField('Enter Teacher ID to confirm new assignment creation')
+    due_date = DateField('Due Date', render_kw={"placeholder": 'YYYY-MM-DD'})
     students = SelectMultipleField(choices=classlist, default=['1001', '1002'])
+    teacher_id = IntegerField('Enter Teacher ID to confirm new assignment creation', render_kw={"placeholder": '###'})
     
     
 class ScoresForm(FlaskForm):
+    '''Teacher update a student score form.'''
     student_id = HiddenField('StudentID')
     assignment_id = HiddenField('AssignmentID')
-    score = IntegerField('Score', default=0)  
+    score = IntegerField('Score', render_kw={"placeholder": '0'})  
     passed = BooleanField('Passed')

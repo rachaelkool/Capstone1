@@ -19,24 +19,24 @@
       {% for score in student.scores %}
       <tbody>
         <tr>
-            <td>{{score.assignments.name}}</td>
+            <td class="col-4">{{score.assignments.name}}</td>
 
-            <td>{{score.assignments.due_date}}</td>
+            <td class="col-2">{{score.assignments.due_date}}</td>
 
             {% if score.score %}
-            <td>{{score.score}}%</td>
+            <td class="col-2">{{score.score}}%</td>
             {% else %}
-            <td class="text-danger">incomplete</td>
+            <td class="text-danger col-2">incomplete</td>
             {% endif %}
 
             {% if score.passed == False %}
-            <td>
+            <td class="col-4">
               <form action="/publish/attempt/{{score.id}}" method="POST">
                 <button class="btn btn-link btn-sm pb-0"><i class="text-danger">request another attempt</i></button>
               </form>           
             </td>
             {% else %}
-            <td></td>
+            <td class="col-4"></td>
             {% endif %}
 
         </tr>

@@ -1,4 +1,4 @@
-"""Teacher views tests."""
+"""Teacher view tests."""
 
 # run these tests like:
 #
@@ -17,11 +17,9 @@ app.config['WTF_CSRF_ENABLED'] = False
 
 
 class TeacherViewTestCase(TestCase):
-    """."""
-
+    '''Tests for student view.'''
     def setUp(self):
-        """"""
-
+        '''Create test client, add sample data.'''
         db.drop_all()
         db.create_all()
 
@@ -44,14 +42,15 @@ class TeacherViewTestCase(TestCase):
 
 
     def tearDown(self):
+        '''Run after each test.'''
         resp = super().tearDown()
         db.session.rollback()
         return resp
 
 
     def test_teacher_dashboard(self):
+        '''Shows teacher created assignments.'''
         self.setUp()
-
         with self.client as client:
             with client.session_transaction() as sess:
                 sess['id'] = self.teacher2.id
@@ -62,6 +61,7 @@ class TeacherViewTestCase(TestCase):
             self.assertIn('<h2 class="display-4">Assignments</h2>', str(resp.data))
 
     def test_assignment_info(self):
+        '''Teacher can click on assignment name for individual student scores.'''
         self.setUp()
         test_assignment = Assignment(id=1, name='Test Assignment', teacher_id=self.teacher1.id)
         db.session.add(test_assignment)
@@ -77,17 +77,17 @@ class TeacherViewTestCase(TestCase):
 
 
     def test_logged_out_teacher(self):
+        '''If teacher is logged out assignments are not visible. Redirects to login page.'''
         self.setUp()
-
         with self.client as client:
 
             resp = client.get(f'/teachers/{self.teacher2.id}', follow_redirects=True)
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Please login first!", str(resp.data))
+            self.assertIn('Please login first!', str(resp.data))
 
 
     def test_add_assignment(self):
-        """"""
+        '''Teacher can create a new assignment and add students.'''
         self.setUp()
         test_assignment = Assignment(id=1, name='Test Assignment', teacher_id=self.teacher1.id)
         db.session.add(test_assignment)
@@ -108,6 +108,7 @@ class TeacherViewTestCase(TestCase):
             
 
     def test_delete_assignment(self):
+        '''Teacher can delete an assignment.'''
         self.setUp()
         test_assignment = Assignment(id=1, name='Test Assignment', teacher_id=self.teacher1.id)
         db.session.add(test_assignment)
@@ -115,7 +116,7 @@ class TeacherViewTestCase(TestCase):
 
         with self.client as client:
             with client.session_transaction() as sess:
-                sess['teacher_id'] = self.teacher1.id
+                sess['id'] = 1
 
             resp = client.post('/assignments/1/delete', follow_redirects=True)
            
@@ -126,16 +127,17 @@ class TeacherViewTestCase(TestCase):
 
 
     def test_logged_out_add_assignment(self):
+        '''If teacher is logged out, cannot create a new assignment. Redirects to login page.'''
         self.setUp()
-
         with self.client as client:
             resp = client.post('/assignments/add', data={"name": "Assignment"}, follow_redirects=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Please login first!", str(resp.data))
+            self.assertIn('Please login first!', str(resp.data))
 
 
     def test_logged_out_delete_assignment(self):
+        '''If teacher is logged out, cannot delete an assignment. Redirects to login page.'''
         self.setUp()
         test_assignment = Assignment(id=1, name='Test Assignment', teacher_id=self.teacher1.id)
         db.session.add(test_assignment)
@@ -144,13 +146,14 @@ class TeacherViewTestCase(TestCase):
         with self.client as client:
             resp = client.post('/assignments/1/delete', follow_redirects=True)
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Please login first!", str(resp.data))
+            self.assertIn('Please login first!', str(resp.data))
 
             test_assignment = Assignment.query.get(1)
             self.assertIsNotNone(test_assignment)
 
 
     def wrong_user_add_assignment(self):
+        '''Teacher cannot create a new assignment on another teacher's account. Redirects to login page.'''
         self.setUp()
         with self.client as client:
             with client.session_transaction() as sess:
@@ -158,10 +161,11 @@ class TeacherViewTestCase(TestCase):
 
             resp = client.post("/assignments/add", data={"name": "Assignment", "teacher_id": self.teacher2.id}, follow_redirects=True)
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Please login first!", str(resp.data))
+            self.assertIn('Please login first!', str(resp.data))
 
 
     def test_wrong_user_delete_assignment(self):
+        '''Teacher cannot delete another teacher's assignment. Redirects to login page.'''
         self.setUp()
         test_assignment = Assignment(id=1, name='Test Assignment', teacher_id=self.teacher1.id)
         db.session.add(test_assignment)

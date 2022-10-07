@@ -1,4 +1,4 @@
-"""Teacher views tests."""
+"""Student view tests."""
 
 # run these tests like:
 #
@@ -17,11 +17,9 @@ app.config['WTF_CSRF_ENABLED'] = False
 
 
 class StudentViewTestCase(TestCase):
-    """"""
-
+    '''Tests for student view.'''
     def setUp(self):
-        """"""
-
+        '''Create test client, add sample data.'''
         db.drop_all()
         db.create_all()
 
@@ -43,12 +41,14 @@ class StudentViewTestCase(TestCase):
 
 
     def tearDown(self):
+        '''Run after each test.'''
         resp = super().tearDown()
         db.session.rollback()
         return resp
 
 
     def test_student_dashboard(self):
+        '''Shows student scores on assignments. Shows another attempt request on failed assignments.'''
         self.setUp()
         test_assignment = Assignment(id=1, name='Test Assignment')
         db.session.add(test_assignment)
@@ -70,31 +70,33 @@ class StudentViewTestCase(TestCase):
 
 
     def test_student_request(self):
-            self.setUp()
-            test_assignment = Assignment(id=1, name='Test Assignment')
-            db.session.add(test_assignment)
-            db.session.commit()
-            test_score = StudentAssignment(id=3, student_id=self.student2.id, assignment_id=1, score=22, passed=False)
-            db.session.add(test_score)
-            db.session.commit()
+        '''Student can click link to send a request for another attempt on assignment to teacher.'''
+        self.setUp()
+        test_assignment = Assignment(id=1, name='Test Assignment')
+        db.session.add(test_assignment)
+        db.session.commit()
+        test_score = StudentAssignment(id=3, student_id=self.student2.id, assignment_id=1, score=22, passed=False)
+        db.session.add(test_score)
+        db.session.commit()
 
-            with self.client as client:
-                with client.session_transaction() as sess:
-                    sess['id'] = self.student2.id
+        with self.client as client:
+            with client.session_transaction() as sess:
+                sess['id'] = self.student2.id
 
-                resp = client.get('/publish/attempt/3', follow_redirects=True)
-                self.assertEqual(resp.status_code, 200)
-                self.assertIn('Request sent.', str(resp.data))
+            resp = client.get('/publish/attempt/3', follow_redirects=True)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('Request sent.', str(resp.data))
 
 
     def test_logged_out_student(self):
+        '''If student is logged out assignments and scores are not visible. Redirects to login page.'''
         self.setUp()
 
         with self.client as client:
 
             resp = client.get(f'/students/{self.student2.id}', follow_redirects=True)
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Please login first!", str(resp.data))
+            self.assertIn('Please login first!', str(resp.data))
 
 
 

@@ -1,4 +1,4 @@
-"""Teacher views tests."""
+"""Models tests."""
 
 # run these tests like:
 #
@@ -17,9 +17,9 @@ app.config['WTF_CSRF_ENABLED'] = False
 
 
 class StudentModelTestCase(TestCase):
+    '''Tests for student model.'''
     def setUp(self):
-        """"""
-
+        '''Create test client, add sample data.'''
         db.drop_all()
         db.create_all()
         
@@ -44,14 +44,14 @@ class StudentModelTestCase(TestCase):
 
 
     def tearDown(self):
+        '''Run after each test.'''
         res = super().tearDown()
         db.session.rollback()
         return res
 
 
     def test_student_model(self):
-        """Does basic model work?"""
-
+        '''Tests if basic student model works.'''
         student = Student(
             id=5050,
             email="test@test.com",
@@ -68,22 +68,25 @@ class StudentModelTestCase(TestCase):
 
 
     def test_student_authentication(self):
+        '''Tests student login.'''
         student = Student.authenticate(self.student1.email, 'password')
         self.assertEqual(student.id, self.student1.id)
 
 
     def test_invalid_student_email(self):
+        '''Tests invalid student email when logging in.'''
         self.assertFalse(Student.authenticate('bademail', 'password'))
 
 
     def test_invalid_student_password(self):
+        '''Tests invalid student password when logging in.'''
         self.assertFalse(Student.authenticate(self.student1.email, 'dumbpassword'))
 
 
 class TeacherModelTestCase(TestCase):
+    '''Tests for student model.'''
     def setUp(self):
-        """"""
-
+        '''Create test client, add sample data.'''
         db.drop_all()
         db.create_all()
         
@@ -102,14 +105,14 @@ class TeacherModelTestCase(TestCase):
 
 
     def tearDown(self):
+        '''Run after each test.'''
         res = super().tearDown()
         db.session.rollback()
         return res
 
 
     def test_teacher_model(self):
-        """Does basic model work?"""
-
+        '''Tests if basic teacher model works.'''
         teacher= Teacher(
             id=5051,
             email="test@test.com",
@@ -125,22 +128,25 @@ class TeacherModelTestCase(TestCase):
 
 
     def test_teacher_authentication(self):
+        '''Tests teacher login.'''
         teacher = Teacher.authenticate(self.teacher1.email, 'password')
         self.assertEqual(teacher.id, self.teacher1.id)
 
 
     def test_invalid_teacher_email(self):
+        '''Tests invalid teacher email when logging in.'''
         self.assertFalse(Teacher.authenticate('bademail', 'password'))
 
 
     def test_invalid_teacher_password(self):
+        '''Tests invalid teacher password when logging in.'''
         self.assertFalse(Teacher.authenticate(self.teacher1.email, 'dumbpassword'))
 
 
 class AssignmentModelTestCase(TestCase):
+    '''Tests for assignment model.'''
     def setUp(self):
-        """"""
-
+        '''Create test client, add sample data.'''
         db.drop_all()
         db.create_all()
         
@@ -159,14 +165,14 @@ class AssignmentModelTestCase(TestCase):
 
 
     def tearDown(self):
+        '''Run after each test.'''
         res = super().tearDown()
         db.session.rollback()
         return res
 
 
     def test_assignment_model(self):
-        """Does basic model work?"""
-
+        '''Tests if basic assignment model works.'''
         assignment = Assignment(id=2, 
         name='Test Assignment', 
         due_date='2022-09-25', 
@@ -180,9 +186,9 @@ class AssignmentModelTestCase(TestCase):
 
 
 class StudentAssignmentModelTestCase(TestCase):
+    '''Tests for student assignment model.'''
     def setUp(self):
-        """"""
-
+        '''Create test client, add sample data.'''
         db.drop_all()
         db.create_all()
         
@@ -206,15 +212,15 @@ class StudentAssignmentModelTestCase(TestCase):
         db.session.commit()
 
 
-    def tearDown(self):
+    def tearDown(self):        
+        '''Run after each test.'''
         res = super().tearDown()
         db.session.rollback()
         return res
 
 
     def test_student_assignment_model(self):
-        """Does basic model work?"""
-
+        '''Tests if basic student assignment model works.'''
         assignment = Assignment(id=2, 
         name='Test Assignment', 
         due_date='2022-09-25', 
