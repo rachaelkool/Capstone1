@@ -224,6 +224,10 @@ def delete_assignment(id):
         return redirect('/teachers/login')
     else:
         assignment = Assignment.query.get_or_404(id)
+
+        assignment_scores = StudentAssignment.query.filter_by(assignment_id=assignment.id).all()
+        for score in assignment_scores:
+            db.session.delete(score)
         db.session.delete(assignment)
         db.session.commit()
         return redirect(f'/teachers/{assignment.teacher_id}')
