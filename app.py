@@ -206,8 +206,6 @@ def edit_assignment(id):
                     db.session.commit()
                 except exc.IntegrityError:
                     db.session.rollback()
-               
-                    
 
             db.session.commit()      
 
