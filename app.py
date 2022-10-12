@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 
-
+# app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///gradebook_db"
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL', 'postgresql:///flask-heroku')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
