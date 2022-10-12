@@ -4,14 +4,16 @@ from flask_debugtoolbar import DebugToolbarExtension
 from models import connect_db, db, Teacher, Student, Assignment, StudentAssignment
 from forms import TeacherRegisterForm, TeacherLoginForm, StudentRegisterForm, StudentLoginForm, AssignmentForm, ScoresForm
 import pusher
+import os
 
 app = Flask(__name__)
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gradebook_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL', 'postgresql:///flask-heroku')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
-app.config['SECRET_KEY'] = 'secretkey'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'shh')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 connect_db(app)
