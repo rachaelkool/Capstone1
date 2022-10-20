@@ -12,5 +12,5 @@ As for the teacher view, when logged in, the teacher dashboard will be displayed
 The seed file contains exisitngs students and teacher to use app with hypothetical class. 
 
 
-Tech stack: Python, Flask, WTForms, PostgreSQL, SQLAlchemy, Heroku, Jinja, RESTful API(https://dashboard.pusher.com/), JavaScript, HTML, Bootstrap, Bcrypt
+Tech stack: Python, Flask, WTForms, PostgreSQL, SQLAlchemy, Heroku, Jinja, API(https://dashboard.pusher.com/), JavaScript, HTML, Bootstrap, Bcrypt
 
